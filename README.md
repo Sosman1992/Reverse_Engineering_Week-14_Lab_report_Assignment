@@ -17,8 +17,14 @@ I tried getting to make the victim program "pizza" to crash by entering a long s
 
 ![Screenshot from 2023-04-30 12-53-35](https://user-images.githubusercontent.com/66968869/235371217-5ed04c10-2570-4632-a599-71713944d353.png)
 
-Also using format strings to make something strange happen 
+Also using format strings to make something strange happen; by running the executable "pizza" and passing in some format string characters, it can be seen that the program is vulnerable(by providing memory addresses) as it can be seen from the image below as a sample output:
+
+![Screenshot from 2023-04-30 16-07-40](https://user-images.githubusercontent.com/66968869/235378266-9a28a003-1ae5-4af0-8cc7-232930b2ebbe.png)
 
 Moreover, running the file `python3 python_injection.py` provided the output below:
 
-![Screenshot from 2023-04-30 15-53-58](https://user-images.githubusercontent.com/66968869/235377956-95da115e-5671-4bea-a685-994b153fcbc3.png)
+![Screenshot from 2023-04-30 16-00-49](https://user-images.githubusercontent.com/66968869/235378272-5416a3b1-c783-46f2-a5bf-8a86afd1dea4.png)
+
+Furthermore, Opening the executable in Ghidra to really see how it works (and the library functions it is using).
+
+Lastly, running the victim program "pizza" in GDB.
