@@ -10,3 +10,5 @@ After downloading the victim program: pizza to my desktop and executed it in my 
 After running the victim program: pizza to see how it works as it can be shown from the image below:
 
 ![Screenshot from 2023-04-30 12-09-30](https://user-images.githubusercontent.com/66968869/235370146-73381ada-ad4d-47cd-9d69-4d2da068bf7f.png)
+
+I then proceeded to Install pwntools by running `pip install pwntools` in my terminal window to install pwntools library for Python on my system.
