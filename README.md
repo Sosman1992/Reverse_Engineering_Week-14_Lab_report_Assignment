@@ -18,3 +18,7 @@ I tried getting to make the victim program "pizza" to crash by entering a long s
 ![Screenshot from 2023-04-30 12-53-35](https://user-images.githubusercontent.com/66968869/235371217-5ed04c10-2570-4632-a599-71713944d353.png)
 
 Also using format strings to make something strange happen 
+
+Moreover, running the file `python3 python_injection.py` provided the output below:
+
+![Screenshot from 2023-04-30 15-53-58](https://user-images.githubusercontent.com/66968869/235377956-95da115e-5671-4bea-a685-994b153fcbc3.png)
