@@ -32,11 +32,11 @@ Lastly, running the victim program "pizza" in GDB.
 ## python script using `pwntools` that executes the given program [pizza], leaks the stack offset, and spawns a shell.
 Below is a script in python to run the pizza program, getting the pizza program executable to crash (segfault), stack offset and spawning of the shell. 
 ```
-!/usr/bin/env python3
+#!/usr/bin/env python3
 
 from pwn import *
 
-<!-- Setting up context -->
+#Setting up context
 context.arch = 'amd64'
 context.os = 'linux'
 
