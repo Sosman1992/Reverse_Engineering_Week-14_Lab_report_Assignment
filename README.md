@@ -31,7 +31,7 @@ Lastly, running the victim program "pizza" in GDB.
 
 ## python script using `pwntools` that executes the given program [pizza], leaks the stack offset, and spawns a shell.
 Below is a script in python to run the pizza program, getting the pizza program executable to crash (segfault), stack offset and spawning of the shell. 
-'''
+```
 !/usr/bin/env python3
 
 from pwn import *
@@ -67,7 +67,7 @@ p.send(payload)
 
 p.interactive()
 
-'''
+```
 The #!/usr/bin/env python3 instruction at the beginning of this script is used for specifying the version of python interpreter and its dependencies to use when parsing the script. rAlso the instruction `from pwn import *` which is normally used in exploit development to import the "pwntools" library, to provide a set of useful tools and utilities for interacting with vulnerable programs and services and also  providing functionalities for compiling and executing shellcode. Also,
 context is one of the function's of "pwntools" library that is used to set various context variables that affect the behavior of the library when interacting with vulnerable programs and services. Arch, os, endian, and word_size variables are some of the options that can be set using the context function. Also the command `binary = './pizza'` to define the targeted executable and linkable format.
 
